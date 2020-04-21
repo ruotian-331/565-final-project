@@ -1,0 +1,23 @@
+#reducing data set by 9/10*n
+set.seed(2876)
+index <- sample(1600000, 160000)
+twitter.sub <- twitter.data[index,]
+
+#list of negative words
+negative_words <- c("upset", "sad", "annoyed","miserable","grumpy","bs","wtf")
+
+#add features to dataset
+for (i in 1:length(negative_words)) {
+  newfeature <- rep(0,160000)
+  twitter.sub <- cbind(twitter.sub, newfeature)
+}
+
+colnames(twitter.sub) <- append(c("Sentience","Time", "Username", "Tweet"),negative_words)
+
+#label the dataset
+for (i in 1:length(negative_words)) {
+  neg_subset <- Search(twitter.sub,negative_words[i], max.distance = 0, column.name = "Tweet")
+  for (j in 1:nrow(neg_subset)) {
+    twitter.sub[which(rownames(twitter.sub)==as.numeric(rownames(neg_subset)[j])),4+i] <- 1
+  }
+}
