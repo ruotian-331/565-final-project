@@ -1,0 +1,24 @@
+setwd("~/Downloads/final.project")
+twitter.data <- read.csv("tweeter.sentiment.csv")
+
+twitter.data <- twitter.data[,-2]
+twitter.data <- twitter.data[,-3]
+
+twitter.data[,2] <- as.character(twitter.data[,2])
+twitter.data[,3] <- as.character(twitter.data[,3])
+twitter.data[,4] <- as.character(twitter.data[,4])
+
+twitter.data <- rbind(colnames(twitter.data), twitter.data)
+colnames(twitter.data) <- c("Sentience","Time", "Username", "Tweet")
+
+twitter.data[1,1] <- 0
+
+#negative.words <- c("upset", "sad", "annoyed","miserable","grumpy","bs","wtf")
+
+upset <- Search(twitter.data,"upset")
+
+twitter.data$Upset <- 0
+
+for (i in 1:nrow(twitter.data)) {
+  twitter.data$Upset[as.numeric(rownames(upset))[i]] <- 1
+}
